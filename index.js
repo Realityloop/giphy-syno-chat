@@ -1,42 +1,54 @@
+// Request.
+const request = require('request')
+
 // Express.
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 
-// HTTP.
-const request = require('request')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 
 app.get('/', function (req, res) {
-    var text = req.query.text.substr(7)
+    res.send()
+})
 
-    var query = {
-        api_key: process.env.GIPHY_API_KEY,
-        q: text
-    }
+app.post('/', function (req, res) {
+    if (typeof(req.body.text) !== 'undefined') {
+        var text = req.body.text.substr(7)
 
-    request({url: 'http://api.giphy.com/v1/gifs/search', qs: query}, function(err, response, body) {
-        var data = JSON.parse(body)
+        var query = {
+            api_key: process.env.GIPHY_API_KEY,
+            q: text
+        }
 
-        if (!err && response.statusCode == 200) {
-            var rand = Math.floor(Math.random() * 25)
+        request({url: 'http://api.giphy.com/v1/gifs/search', qs: query}, function(err, response, body) {
+            var data = JSON.parse(body)
 
-            if (typeof(data.data[rand]) !== 'undefined') {
-                var item = data.data[rand]
-                res.send(item)
+            if (!err && response.statusCode == 200) {
+                var rand = Math.floor(Math.random() * 25)
+
+                if (typeof(data.data[rand]) !== 'undefined') {
+                    var item = data.data[rand]
+                    res.send(item)
+                }
+
+                // Error if item isn't present.
+                else {
+                    res.send('Error, item is missing.')
+                }
             }
 
-            // Error if item isn't present.
             else {
-                res.send('Error, item is missing.')
+                // Print error message if present.
+                if (typeof(data.message) !== 'undefined') {
+                    res.send(data.message)
+                }
             }
-        }
-
-        else {
-            // Print error message if present.
-            if (typeof(data.message) !== 'undefined') {
-                res.send(data.message)
-            }
-        }
-    })
+        })
+    }
 })
 
 app.listen(3000, function () {
