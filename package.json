@@ -1,0 +1,22 @@
+{
+  "name": "giphy-syno-chat",
+  "version": "1.0.0",
+  "description": "Giphy integration for Synology Chat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Giphy",
+    "Synology",
+    "Chat",
+    "NodeJS",
+    "Realityloop"
+  ],
+  "author": "Stuart Clark <stuart@realityloop.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4",
+    "request": "^2.81.0"
+  }
+}
